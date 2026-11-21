@@ -84,7 +84,16 @@
 			// CORVAX GRID ADD: REWORK BAALI RUNE
 				if(sacrificed_human.stat != SOFT_CRIT && sacrificed_human.stat != HARD_CRIT && sacrificed_human.stat != DEAD)
 					continue
+				// CORVAX GRID ADD: REWORK BAALI RUNE
 				if(HAS_TRAIT(sacrificed_human, TRAIT_BAALI_SACRIFICED) || HAS_TRAIT_FROM(sacrificed_human, TRAIT_AURA_OF_INFERNO, DAIMONION_TRAIT))
+					to_chat(sacrificed_human, span_userdanger("ВАШУ ДУШУ УТАСКИВАЮТ В ПРЕИСПОДНЮЮ!"))
+					ADD_TRAIT(sacrificed_human, TRAIT_BAALI_SACRIFICED, DAIMONION_TRAIT)
+					sacrificed_human.dust(drop_items = TRUE)
+					if(sacrificed_human.ckey)
+						var/mob/dead/new_player/player = new()
+						player.ckey = sacrificed_human.ckey
+					qdel(sacrificed_human)
+					sacrifice = TRUE
 					continue
 				if(!sacrificed_human.mind || !sacrificed_human.client)
 					ADD_TRAIT(sacrificed_human, TRAIT_BAALI_SACRIFICED, DAIMONION_TRAIT)
@@ -92,18 +101,9 @@
 					sacrificed_human.dust(drop_items = TRUE)
 					sacrifice = TRUE
 					continue
-				ADD_TRAIT(sacrificed_human, TRAIT_BAALI_SACRIFICED, DAIMONION_TRAIT)
 				human_user.infernal_favor += calculate_favor(sacrificed_human)
 				var/spawn_point = sacrificed_human.mind.assigned_role.get_roundstart_spawn_point()
 				if(spawn_point)
-					if(HAS_TRAIT_FROM(sacrificed_human, TRAIT_AURA_OF_INFERNO, DAIMONION_TRAIT))
-						to_chat(sacrificed_human, span_userdanger("ВАШУ ДУШУ УТАСКИВАЮТ В ПРЕИСПОДНЮЮ!"))
-						sacrificed_human.dust(drop_items = TRUE)
-						var/mob/dead/new_player/player = new()
-						player.ckey = sacrificed_human.ckey
-						qdel(sacrificed_human)
-						sacrifice = TRUE
-						continue
 					to_chat(sacrificed_human, span_userdanger("ЧТО-ТО РВЁТ ВАШУ ДУШУ НА ЧАСТИ! КАКАЯ БОЛЬ!"))
 					sacrificed_human.forceMove(spawn_point)
 					ADD_TRAIT(sacrificed_human, TRAIT_AURA_OF_INFERNO, DAIMONION_TRAIT)
@@ -114,6 +114,7 @@
 					sacrificed_human.log_message("has been sacrificed the first time on baali rune by [key_name(user)].", LOG_GAME)
 					log_admin("[key_name(sacrificed_human)] has been sacrificed the first time on baali rune by [key_name(user)].")
 				else
+					ADD_TRAIT(sacrificed_human, TRAIT_BAALI_SACRIFICED, DAIMONION_TRAIT)
 					sacrificed_human.dust(drop_items = TRUE)
 					var/mob/dead/new_player/player = new()
 					player.ckey = sacrificed_human.ckey
