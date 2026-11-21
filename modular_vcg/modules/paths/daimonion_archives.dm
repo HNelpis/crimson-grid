@@ -9,7 +9,6 @@
 	desc = "Ваши демонические познания позволяют просить милостей у Инфернальных сил."
 	name = "Infernal Rune"
 	resistance_flags = INDESTRUCTIBLE // CORVAX EDIT ADD
-	var/sacrifice_cooldown_until = 0 // CORVAX GRID ADD: REWORK BAALI RUNE
 
 	products_list = list(
 	// SPELLBOOKS
@@ -77,8 +76,6 @@
 
 /obj/structure/retail/occult/baali/attack_hand(mob/living/user, list/modifiers)
 	. = ..()
-	if(world.time < sacrifice_cooldown_until)
-		return
 	if(can_shop(user))
 		var/sacrifice = FALSE
 		if(ishuman(user))
@@ -87,11 +84,15 @@
 			// CORVAX GRID ADD: REWORK BAALI RUNE
 				if(sacrificed_human.stat != SOFT_CRIT && sacrificed_human.stat != HARD_CRIT && sacrificed_human.stat != DEAD)
 					continue
+				if(HAS_TRAIT(sacrificed_human, TRAIT_BAALI_SACRIFICED) || HAS_TRAIT_FROM(sacrificed_human, TRAIT_AURA_OF_INFERNO, DAIMONION_TRAIT))
+					continue
 				if(!sacrificed_human.mind || !sacrificed_human.client)
+					ADD_TRAIT(sacrificed_human, TRAIT_BAALI_SACRIFICED, DAIMONION_TRAIT)
 					human_user.infernal_favor += calculate_favor(sacrificed_human)
 					sacrificed_human.dust(drop_items = TRUE)
 					sacrifice = TRUE
 					continue
+				ADD_TRAIT(sacrificed_human, TRAIT_BAALI_SACRIFICED, DAIMONION_TRAIT)
 				human_user.infernal_favor += calculate_favor(sacrificed_human)
 				var/spawn_point = sacrificed_human.mind.assigned_role.get_roundstart_spawn_point()
 				if(spawn_point)
@@ -125,8 +126,6 @@
 			if(sacrifice || upset)
 			*/
 			if(sacrifice)
-				// CORVAX GRID ADD: REWORK BAALI RUNE
-				sacrifice_cooldown_until = world.time + 2 SECONDS
 				playsound(get_turf(src), 'sound/effects/magic/demon_dies.ogg', 100, TRUE)
 				animate(src, color = initial(color), time = 0.5 SECONDS)
 				addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, update_atom_colour)), 0.5 SECONDS)
