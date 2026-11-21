@@ -85,8 +85,11 @@
 				if(sacrificed_human.stat != SOFT_CRIT && sacrificed_human.stat != HARD_CRIT && sacrificed_human.stat != DEAD)
 					continue
 				// CORVAX GRID ADD: REWORK BAALI RUNE
-				if(HAS_TRAIT(sacrificed_human, TRAIT_BAALI_SACRIFICED) || HAS_TRAIT_FROM(sacrificed_human, TRAIT_AURA_OF_INFERNO, DAIMONION_TRAIT))
+				if(HAS_TRAIT(sacrificed_human, TRAIT_BAALI_SACRIFICED))
+					continue
+				if(HAS_TRAIT_FROM(sacrificed_human, TRAIT_AURA_OF_INFERNO, DAIMONION_TRAIT))
 					to_chat(sacrificed_human, span_userdanger("ВАШУ ДУШУ УТАСКИВАЮТ В ПРЕИСПОДНЮЮ!"))
+					human_user.infernal_favor += calculate_favor(sacrificed_human)
 					ADD_TRAIT(sacrificed_human, TRAIT_BAALI_SACRIFICED, DAIMONION_TRAIT)
 					sacrificed_human.dust(drop_items = TRUE)
 					if(sacrificed_human.ckey)
