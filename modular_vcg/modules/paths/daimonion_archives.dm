@@ -46,7 +46,7 @@
 	new /datum/data/vending_product("Кровавый камень", /obj/item/occult_artifact/vampire/bloodstone, 230),
 
 	// High tier artifacts
-	new /datum/data/vending_product("Гнусная чаша", /obj/item/occult_artifact/vampire/odious_chalice, 100),
+	new /datum/data/vending_product("Гнусная чаша", /obj/item/occult_artifact/vampire/odious_chalice, 250),
 
 )
 
