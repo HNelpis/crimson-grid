@@ -140,6 +140,6 @@
 	else
 		magazine = null
 
-	old_mag.forceMove(get_turf(user))
+ыы	old_mag.forceMove(get_turf(user))
 	old_mag.update_icon()
 	update_icon()
